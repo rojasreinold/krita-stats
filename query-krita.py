@@ -11,23 +11,15 @@ bzapi = bugzilla.Bugzilla(URL)
 def open_bugs_until(end_date):
     query_sum = []
     check_date = date.fromisoformat('2013-01-01')
-    while (check_date < end_date):
-        next_year_date = check_date + timedelta(days=365)
-        query = bzapi.url_to_query(("https://bugs.kde.org/"
-                                    "buglist.cgi?bug_severity=critical&bug_severity=grave&"
-                                    "bug_severity=major&bug_severity=crash&bug_severity=normal&"
-                                    "bug_severity=minor&bug_status=UNCONFIRMED&"
-                                    "bug_status=CONFIRMED&bug_status=ASSIGNED&chfield=%5BBug%20creation%5D&"
-                                    "chfieldfrom=" + check_date.strftime("%Y-%m-%d") + "&"
-                                    "chfieldto=" + next_year_date.strftime("%Y-%m-%d") + "&"
-                                    "bug_status=REOPENED&list_id=1898207&product=krita"))
-        query["include_fields"] = ["id", "summary"]
-        query_sum += bzapi.query(query)
-        #print("total open bugs on " + next_year_date.strftime("%Y-%m-%d") + ": " + str(len(query_sum)))
-        #print(query_sum)
-        real_time.sleep(1)
-        check_date = check_date + timedelta(days=365)
-    print("total open bugs on " + next_year_date.strftime("%Y-%m-%d") + ": " + str(len(query_sum)))
+    query = bzapi.url_to_query(("https://bugs.kde.org/"
+                                "buglist.cgi?bug_severity=critical&bug_severity=grave&"
+                                "bug_severity=major&bug_severity=crash&bug_severity=normal&"
+                                "bug_severity=minor&bug_status=UNCONFIRMED&"
+                                "bug_status=CONFIRMED&bug_status=ASSIGNED&"
+                                "bug_status=REOPENED&product=krita"))
+    query["include_fields"] = ["id", "summary"]
+    query_sum += bzapi.query(query)
+    print("total open bugs on " + end_date.strftime("%Y-%m-%d") + ": " + str(len(query_sum)))
     return query_sum
 
 
