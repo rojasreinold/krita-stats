@@ -1,6 +1,8 @@
 #!/usr/bin/env python
-
+import argparse
 import time as real_time
+
+from dateutil import parser as date_parser
 from datetime import date, time, datetime, timedelta
 import bugzilla
 
@@ -55,16 +57,22 @@ def closed_bugs_in_week(end_date):
 
 
 def main():
-    # All Reported bugs since until now
-    # TODO: get all reported bugs  by slicing all requests by year and suming them up
-    # Reported bugs for the last month
-    today_date = date.today()
-    reported_bugs = reported_bugs_in_week(today_date)
+    arg_parser = argparse.ArgumentParser(description="Get weekly Krita stats for a specific date")
+    arg_parser.add_argument("-d", "--date", type=ascii, help="Give the end of week date in format %Y-%m-%d ( ex: 2021-08-01)")
 
-    closed_bugs = closed_bugs_in_week(today_date)
+    args = arg_parser.parse_args()
+
+    if args.date is not None:
+        end_date = date_parser.parse(args.date)
+    else:
+        end_date = date.today()
+    print(end_date)
+    reported_bugs = reported_bugs_in_week(end_date)
+
+    closed_bugs = closed_bugs_in_week(end_date)
     print("Newly reported bugs: %d\nClosed bugs: %d" % (len(reported_bugs), len(closed_bugs)))
 
-    all_open_bugs = open_bugs_until(today_date)
+    all_open_bugs = open_bugs_until(end_date)
 
 
 if __name__ == "__main__":
