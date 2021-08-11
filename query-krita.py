@@ -21,7 +21,6 @@ def open_bugs_until(end_date):
                                 "bug_status=REOPENED&product=krita"))
     query["include_fields"] = ["id", "summary"]
     query_sum += bzapi.query(query)
-    print("total open bugs on " + end_date.strftime("%Y-%m-%d") + ": " + str(len(query_sum)))
     return query_sum
 
 
@@ -66,13 +65,13 @@ def main():
         end_date = date_parser.parse(args.date)
     else:
         end_date = date.today()
-    print(end_date)
     reported_bugs = reported_bugs_in_week(end_date)
 
     closed_bugs = closed_bugs_in_week(end_date)
-    print("Newly reported bugs: %d\nClosed bugs: %d" % (len(reported_bugs), len(closed_bugs)))
 
-    all_open_bugs = open_bugs_until(end_date)
+    total_open_bugs = open_bugs_until(end_date)
+    print("Newly reported bugs: %d\nClosed bugs: %d\ntotal open bugs: %d" %
+          (len(reported_bugs), len(closed_bugs), len(total_open_bugs)))
 
 
 if __name__ == "__main__":
